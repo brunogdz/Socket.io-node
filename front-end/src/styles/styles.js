@@ -64,3 +64,69 @@ export const BtnAcess = styled.button`
     padding: 10px;
     margin-top: 10px;
 `;
+
+/* Chat */
+export const HeaderChat = styled.header`
+    width: 500px;
+    display: flex;
+    align-items: center;
+    padding: 18px 30px;
+`;
+
+export const ImgUser = styled.img`
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    margin: 0 15px;
+`;
+
+export const NameUser = styled.div`
+    font-size: 18px;
+    font-weight: 500;
+`;
+
+export const ChatBox = styled.div`
+    position: relative;
+    min-height: 500px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 10px 10px 20px 10px;
+    background: #f7f7f7;
+    box-shadow: inset 0 32px 32px -32px rgba(0 0 0 / 5%),inset 0 -32px 32px -32px rgba(0,0,0/5%);
+`;
+
+export const ConteudoChat = styled.section`
+    padding: 25px 0px;
+`;
+
+export const MsgEnviada = styled.div`
+    margin: 15px 16px 15px 0;
+    display: flex;
+
+`;
+
+export const DetMsgEnviada = styled.div`
+    margin-left: auto;
+    max-width: calc(100% - 130px);
+`;
+
+export const TextoMsgEnviada = styled.p`
+    background: #6fbced;
+    color: #fff;
+    border-radius: 18px 18px 0 18px;
+    word-wrap: break-word; // para que o navegador não quebre a palavra
+    padding: 8px 16px;
+    box-shadow: 0 0 32px rgba(0 0 0 / 8%), 0rem 16px 16px -16px rgba(0 0 0 /10%);
+`;
+
+export const MsgRecebida = styled.div`
+    margin: 15px 0;
+    display: flex;
+    align-items: flex-end;
+`;
+
+export const DetMsgRecebida = styled.div`
+    margin-right: auto;
+    margin-left: 10px;
+    max-width: calc(100% - 130px);
+`;
