@@ -26,4 +26,9 @@ io = socket(server, {cors: {origin: "*"}})
 // Assim que fizer uma conexão eu vou ter um id da conexão, cada usuário receber um id
 io.on("connection", (socket) => {
     console.log(socket.id);
+
+    socket.on("sala_conectar", (dados) => {
+        console.log("Sala selecionada: " + dados)
+        socket.join(dados);
+    })
 })
