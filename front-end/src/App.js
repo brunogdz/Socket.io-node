@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import socketIOClient from 'socket.io-client';
 
+import { Container, Content, Header, Form, Field, Label, Input, Select, BtnAcess } from './styles/styles'
+
 let socket;
 
 function App() {
@@ -48,30 +50,36 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <h1>Bate Papo Socket</h1>
-      {!logged ?
-        <>
-          <label>Nome: </label>
-          <input type="text" placeholder="Nome" value={nome} onChange={(text) => { setNome(text.target.value) }}
-          /> <br /> <br />
+    <Container className="App">
 
-          <label>Sala: </label>
-          {/* <input type="text" placeholder="Sala" value={sala} onChange={(text) => { setSala(text.target.value) }}
+      {!logged ?
+        <Content>
+          <Header>Bate papo UOL socket</Header>
+          <Form>
+            <Field>
+              <Label>Nome: </Label>
+              <Input type="text" placeholder="Nome" value={nome} onChange={(text) => { setNome(text.target.value) }}
+              />
+            </Field>
+            <Field>
+              <Label>Sala: </Label>
+              {/* <input type="text" placeholder="Sala" value={sala} onChange={(text) => { setSala(text.target.value) }}
           /> <br /> <br /> */}
-          <select name="sala" value={sala} onChange={text => setSala(text.target.value)}>
-            <option value="">Selecione</option>
-            <option value="1">Twitch</option>
-            <option value="2">Discord</option>
-            <option value="3">UFES</option>
-            <option value="4">Github</option>
-          </select>
-          <button onClick={conectarSala}>Acessar Sala</button>
-        </>
+              <Select name="sala" value={sala} onChange={text => setSala(text.target.value)}>
+                <option value="">Selecione</option>
+                <option value="1">Twitch</option>
+                <option value="2">Discord</option>
+                <option value="3">UFES</option>
+                <option value="4">Github</option>
+              </Select>
+            </Field>
+            <BtnAcess onClick={conectarSala}>Acessar Sala</BtnAcess>
+          </Form>
+        </Content>
         :
-        <>
+        <Content>
           {listamensagem.map((msg, key) => {
-            return(
+            return (
               <div key={key}>
                 {msg.nome} : {msg.mensagem}
               </div>
@@ -80,10 +88,10 @@ function App() {
           <input type="text" name="mensagem" placeholder="Mande a mensagem aqui"
             value={mensagem} onChange={(texto) => { setMensagem(texto.target.value) }} />
           <button onClick={enviarMensagem}>Enviar</button>
-        </>
+        </Content>
       }
 
-    </div>
+    </Container>
   );
 }
 
