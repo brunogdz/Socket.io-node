@@ -11,15 +11,40 @@ function App() {
   const [nome, setNome] = useState("");
   const [sala, setSala] = useState("");
 
+  const [mensagem, setMensagem] = useState("");
+  const [listamensagem, setListaMensagem] = useState([]);
+
   useEffect(() => {
     socket = socketIOClient(ENDPOINT);
   }, []);
+
+  useEffect(() => {
+    socket.on("receber_mensagem", (dados) => {
+      setListaMensagem([...listamensagem, dados])
+    });
+  })
 
   const conectarSala = () => {
     console.log("Acessou a sala " + sala + " com o usuário " + nome);
     setLogged(true);
     // alert("Acessou a sala " + sala + " com o usuário " + nome)
     socket.emit("sala_conectar", sala);
+  }
+
+  const enviarMensagem = async () => {
+    // alert("Mensagem: " + mensagem)
+    const conteudoMensagem = {
+      sala,
+      conteudo: {
+        nome,
+        mensagem
+      }
+    }
+    // console.log(conteudoMensagem)
+    await socket.emit("enviar_mensagem", conteudoMensagem);
+    setListaMensagem([...listamensagem, conteudoMensagem.conteudo]);
+    setMensagem("")
+
   }
 
   return (
@@ -44,7 +69,19 @@ function App() {
           <button onClick={conectarSala}>Acessar Sala</button>
         </>
         :
-        "Logado com sucesso!"}
+        <>
+          {listamensagem.map((msg, key) => {
+            return(
+              <div key={key}>
+                {msg.nome} : {msg.mensagem}
+              </div>
+            )
+          })}
+          <input type="text" name="mensagem" placeholder="Mande a mensagem aqui"
+            value={mensagem} onChange={(texto) => { setMensagem(texto.target.value) }} />
+          <button onClick={enviarMensagem}>Enviar</button>
+        </>
+      }
 
     </div>
   );
