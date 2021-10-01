@@ -130,3 +130,40 @@ export const DetMsgRecebida = styled.div`
     margin-left: 10px;
     max-width: calc(100% - 130px);
 `;
+
+export const TextoMsgRecebida = styled.p`
+    background: #58b666;
+    color: #fff;
+    border-radius: 18px 18px 18px 0;
+    word-wrap: break-word; // para que o navegador não quebre a palavra
+    padding: 8px 16px;
+    box-shadow: 0 0 32px rgba(0 0 0 / 8%), 0rem 16px 16px -16px rgba(0 0 0 /10%);
+`;
+
+/* Botão e caixa mensagem */
+export const EnviarMsg = styled.div`
+    padding: 18px 15px;
+    display: flex;
+    justify-content: space-between;
+`;
+
+export const CampoMsg = styled.input`
+    height: 45px;
+    width: calc(100% - 58px);
+    font-size: 16px;
+    padding: 0 13px;
+    border: 1px solid #e6e6e6;
+    outline: none;
+    border-radius: 5px 0 0 5px;
+`;
+
+export const BtnEnviar = styled.button`
+    background: #6fbced;
+    width: 75px;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 19px;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0;
+`;

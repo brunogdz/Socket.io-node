@@ -4,7 +4,7 @@ import socketIOClient from 'socket.io-client';
 import img1 from './assets/1.webp';
 import {
   Container, Content, Header, Form, Field, Label, Input, Select,
-  BtnAcess, HeaderChat, ImgUser, NameUser, ChatBox, ConteudoChat, MsgEnviada, DetMsgEnviada, TextoMsgEnviada, MsgRecebida, DetMsgRecebida
+  BtnAcess, HeaderChat, ImgUser, NameUser, ChatBox, ConteudoChat, MsgEnviada, DetMsgEnviada, TextoMsgEnviada, MsgRecebida, DetMsgRecebida, TextoMsgRecebida, EnviarMsg, CampoMsg, BtnEnviar
 } from './styles/styles'
 
 let socket;
@@ -13,12 +13,12 @@ function App() {
 
   const ENDPOINT = "http://localhost:8080/";
 
-  // const [logged, setLogged] = useState(false);
-  // const [nome, setNome] = useState("");
-  // const [sala, setSala] = useState("");
-  const [logged, setLogged] = useState(true);
-  const [nome, setNome] = useState("Bruno");
-  const [sala, setSala] = useState("1");
+  const [logged, setLogged] = useState(false);
+  const [nome, setNome] = useState("");
+  const [sala, setSala] = useState("");
+  // const [logged, setLogged] = useState(true);
+  // const [nome, setNome] = useState("Bruno");
+  // const [sala, setSala] = useState("1");
 
   const [mensagem, setMensagem] = useState("");
   const [listamensagem, setListaMensagem] = useState([]);
@@ -90,27 +90,33 @@ function App() {
             <NameUser>{nome}</NameUser>
           </HeaderChat>
           <ChatBox>
-            <MsgEnviada>
-              <DetMsgEnviada>
-                <TextoMsgEnviada>Oi tudo bom?</TextoMsgEnviada>
-              </DetMsgEnviada>
-            </MsgEnviada>
-            <MsgRecebida>
-              <DetMsgRecebida>
-                
-              </DetMsgRecebida>
-            </MsgRecebida>
             {listamensagem.map((msg, key) => {
               return (
                 <div key={key}>
-                  {msg.nome} : {msg.mensagem}
+                  {nome === msg.nome ?
+                    <MsgEnviada >
+                      <DetMsgEnviada>
+                        <TextoMsgEnviada>{msg.nome} : {msg.mensagem}</TextoMsgEnviada>
+                      </DetMsgEnviada>
+                    </MsgEnviada>
+                    :
+                    <MsgRecebida>
+                      <DetMsgRecebida>
+                        <TextoMsgRecebida>{msg.nome} : {msg.mensagem}</TextoMsgRecebida>
+                      </DetMsgRecebida>
+                    </MsgRecebida>
+                  }
                 </div>
               )
             })}
-            <input type="text" name="mensagem" placeholder="Mande a mensagem aqui"
-              value={mensagem} onChange={(texto) => { setMensagem(texto.target.value) }} />
-            <button onClick={enviarMensagem}>Enviar</button>
+
           </ChatBox>
+          <EnviarMsg>
+            <CampoMsg type="text" name="mensagem" placeholder="Mande a mensagem aqui"
+              value={mensagem} onChange={(texto) => { setMensagem(texto.target.value) }} />
+            <BtnEnviar onClick={enviarMensagem}>Enviar</BtnEnviar>
+          </EnviarMsg>
+
         </ConteudoChat>
       }
 
