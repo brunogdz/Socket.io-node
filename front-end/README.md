@@ -11,6 +11,9 @@ npm install socket.io-client
 ### Instalando o styled components para transformar o CSS em componentes
 npm install --save styled-components
 
+### Para criar a conexão com o banco de dados usaremos o axios
+npm install --save axios
+
 ## Execuções
 
 npm start

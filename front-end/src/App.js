@@ -7,6 +7,8 @@ import {
   BtnAcess, HeaderChat, ImgUser, NameUser, ChatBox, ConteudoChat, MsgEnviada, DetMsgEnviada, TextoMsgEnviada, MsgRecebida, DetMsgRecebida, TextoMsgRecebida, EnviarMsg, CampoMsg, BtnEnviar
 } from './styles/styles'
 
+import api from './config/configApi'
+
 let socket;
 
 function App() {
@@ -15,6 +17,7 @@ function App() {
 
   const [logged, setLogged] = useState(false);
   const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
   const [sala, setSala] = useState("");
   // const [logged, setLogged] = useState(true);
   // const [nome, setNome] = useState("Bruno");
@@ -33,11 +36,28 @@ function App() {
     });
   })
 
-  const conectarSala = () => {
-    console.log("Acessou a sala " + sala + " com o usuário " + nome);
-    setLogged(true);
-    // alert("Acessou a sala " + sala + " com o usuário " + nome)
-    socket.emit("sala_conectar", sala);
+  const conectarSala = async e => {
+    e.preventDefault();
+    console.log("Acessou a sala " + sala + " com o email " + email);
+
+    const headers = {
+      'Content-Type': 'application/json'
+    }
+    await api.post('/validar-acesso', { email }, { headers })
+      .then((response) => {
+        console.log(response.data.mensagem);
+        console.log(response.data.usuario.id);
+        console.log(response.data.usuario.nome);
+      }).catch((err) => {
+        if(err.response){
+          console.log(err.response.data.mensagem);
+        }else{
+          console.log("Erro: Tente mais tarde")
+        }
+      })
+    // setLogged(true);
+    // // alert("Acessou a sala " + sala + " com o usuário " + nome)
+    // socket.emit("sala_conectar", sala);
   }
 
   const enviarMensagem = async () => {
@@ -62,10 +82,10 @@ function App() {
       {!logged ?
         <Content>
           <Header>Bate papo UOL socket</Header>
-          <Form>
+          <Form onSubmit={conectarSala}>
             <Field>
-              <Label>Nome: </Label>
-              <Input type="text" placeholder="Nome" value={nome} onChange={(text) => { setNome(text.target.value) }}
+              <Label>Email: </Label>
+              <Input type="text" placeholder="email" name="email" value={email} onChange={(text) => { setEmail(text.target.value) }}
               />
             </Field>
             <Field>
@@ -80,7 +100,7 @@ function App() {
                 <option value="4">Github</option>
               </Select>
             </Field>
-            <BtnAcess onClick={conectarSala}>Acessar Sala</BtnAcess>
+            <BtnAcess>Acessar Sala</BtnAcess>
           </Form>
         </Content>
         :
