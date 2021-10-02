@@ -20,6 +20,12 @@ npm install socket.io
 ### Permitir o acesso à API
 npm install cors
 
+### Sequelize serve para o gerenciamento do banco de dados com o MySQL
+npm install --save sequelize
+
+### Como estamos mexendo com o MySQL devemos instalar esse pacote
+npm install --save mysql2
+
 ## Execuções
 
 nodemon app.js
