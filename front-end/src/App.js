@@ -17,6 +17,7 @@ function App() {
 
   const [logged, setLogged] = useState(false);
   const [nome, setNome] = useState("");
+  const [usuarioId, setUsuarioId] = useState("");
   const [email, setEmail] = useState("");
   const [sala, setSala] = useState("");
   // const [logged, setLogged] = useState(true);
@@ -48,6 +49,10 @@ function App() {
         console.log(response.data.mensagem);
         console.log(response.data.usuario.id);
         console.log(response.data.usuario.nome);
+        setNome(response.data.usuario.nome);
+        setUsuarioId(response.data.usuario.id)
+        setLogged(true);
+        socket.emit("sala_conectar", sala);
       }).catch((err) => {
         if(err.response){
           console.log(err.response.data.mensagem);
@@ -55,7 +60,7 @@ function App() {
           console.log("Erro: Tente mais tarde")
         }
       })
-    // setLogged(true);
+    // 
     // // alert("Acessou a sala " + sala + " com o usuário " + nome)
     // socket.emit("sala_conectar", sala);
   }
