@@ -4,7 +4,9 @@ import socketIOClient from 'socket.io-client';
 import img1 from './assets/1.webp';
 import {
   Container, Content, Header, Form, Field, Label, Input, Select,
-  BtnAcess, HeaderChat, ImgUser, NameUser, ChatBox, ConteudoChat, MsgEnviada, DetMsgEnviada, TextoMsgEnviada, MsgRecebida, DetMsgRecebida, TextoMsgRecebida, EnviarMsg, CampoMsg, BtnEnviar
+  BtnAcess, HeaderChat, ImgUser, NameUser, ChatBox, ConteudoChat,
+  MsgEnviada, DetMsgEnviada, TextoMsgEnviada, MsgRecebida, DetMsgRecebida,
+  TextoMsgRecebida, EnviarMsg, CampoMsg, BtnEnviar, AlertErro, AlertSucess
 } from './styles/styles'
 
 import api from './config/configApi'
@@ -20,6 +22,7 @@ function App() {
   const [usuarioId, setUsuarioId] = useState("");
   const [email, setEmail] = useState("");
   const [sala, setSala] = useState("");
+  const [salas, setSalas] = useState([]);
   // const [logged, setLogged] = useState(true);
   // const [nome, setNome] = useState("Bruno");
   // const [sala, setSala] = useState("1");
@@ -34,6 +37,7 @@ function App() {
 
   useEffect(() => {
     socket = socketIOClient(ENDPOINT);
+    listarSalas();
   }, []);
 
   useEffect(() => {
@@ -41,6 +45,25 @@ function App() {
       setListaMensagem([...listamensagem, dados])
     });
   })
+
+  const listarSalas = async () => {
+    await api.get('/listar-sala')
+      .then((response) => {
+        setSalas(response.data.salas);
+      }).catch((err)=> {
+        if(err.response){
+          setStatus({
+            type: 'erro',
+            mensagem: err.response.data.mensagem
+          })
+        }else{
+          setStatus({
+            type: 'erro',
+            mensagem: "Erro: tentar mais tarde API desligada"
+          })
+        }
+      })
+  }
 
   const conectarSala = async e => {
     e.preventDefault();
@@ -121,7 +144,7 @@ function App() {
         <Content>
           <Header>Whatsapp 2</Header>
           <Form onSubmit={conectarSala}>
-            {status.type === 'erro' ? <p style={{color: "#f00"}}>{status.mensagem}</p> : ""}
+            {status.type === 'erro' ? <AlertErro style={{ color: "#f00" }}>{status.mensagem}</AlertErro> : <AlertSucess>{status.mensagem}</AlertSucess>}
             <Field>
               <Label>Email: </Label>
               <Input type="text" placeholder="email" name="email" value={email} onChange={(text) => { setEmail(text.target.value) }}
@@ -133,10 +156,11 @@ function App() {
           /> <br /> <br /> */}
               <Select name="sala" value={sala} onChange={text => setSala(text.target.value)}>
                 <option value="">Selecione</option>
-                <option value="1">Twitch</option>
-                <option value="2">Discord</option>
-                <option value="3">UFES</option>
-                <option value="4">Github</option>
+                {salas.map((sala) => {
+                  return(
+                    <option value={sala.id} key={sala.id}>{sala.nome}</option>
+                  )
+                })}
               </Select>
             </Field>
             <BtnAcess>Acessar Sala</BtnAcess>

@@ -41,6 +41,23 @@ app.get('/listar-mensagem/:sala', async (req, res) => {
     })
   })
 })
+app.get('/listar-sala', async (req, res) => {
+  await Sala.findAll({
+    order: [['nome','ASC']],
+   
+  }).
+  then((salas)=> {
+    return res.json({
+      erro: false,
+      salas
+    });
+  }).catch(() => {
+    return res.status(400).json({
+      erro: true,
+      mensagem: 'Erro nenhuma sala encontrada'
+    })
+  })
+})
 
 app.post('/cadastrar-mensagem', async (req, res) => {
 
