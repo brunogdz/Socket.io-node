@@ -27,6 +27,11 @@ function App() {
   const [mensagem, setMensagem] = useState("");
   const [listamensagem, setListaMensagem] = useState([]);
 
+  const [status, setStatus] = useState({
+    type: "",
+    mensagem: ""
+  })
+
   useEffect(() => {
     socket = socketIOClient(ENDPOINT);
   }, []);
@@ -56,9 +61,15 @@ function App() {
         listarMensagens();
       }).catch((err) => {
         if (err.response) {
-          console.log(err.response.data.mensagem);
+          setStatus({
+            type: 'erro',
+            mensagem: err.response.data.mensagem
+          })
         } else {
-          console.log("Erro: Tente mais tarde")
+          setStatus({
+            type: 'erro',
+            mensagem: "Erro: Tente mais tarde"
+          })
         }
       })
     // 
@@ -110,6 +121,7 @@ function App() {
         <Content>
           <Header>Whatsapp 2</Header>
           <Form onSubmit={conectarSala}>
+            {status.type === 'erro' ? <p style={{color: "#f00"}}>{status.mensagem}</p> : ""}
             <Field>
               <Label>Email: </Label>
               <Input type="text" placeholder="email" name="email" value={email} onChange={(text) => { setEmail(text.target.value) }}
@@ -156,7 +168,6 @@ function App() {
                 </div>
               )
             })}
-
           </ChatBox>
           <EnviarMsg onSubmit={enviarMensagem}>
             <CampoMsg type="text" name="mensagem" placeholder="Mande a mensagem aqui"

@@ -167,3 +167,21 @@ export const BtnEnviar = styled.button`
     cursor: pointer;
     border-radius: 0 5px 5px 0;
 `;
+
+export const AlertErro = styled.p`
+    background-color: #f8d7da;
+    color: #842029;
+    margin: 10px 0;
+    border: 1px solid #f5c2c7;
+    border-radius: 5px;
+    padding: 7px;
+`;
+
+export const AlertSucess = styled.p`
+    background-color: #d1e7dd;
+    color: #0f5132;
+    margin: 10px 0;
+    border: 1px solid #badbcc;
+    border-radius: 5px;
+    padding: 7px;
+`;

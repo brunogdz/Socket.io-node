@@ -14,6 +14,9 @@ npm install --save styled-components
 ### Para criar a conexão com o banco de dados usaremos o axios
 npm install --save axios
 
+### Criar o scroll
+npm install --save react-scroll-to-bottom
+
 ## Execuções
 
 npm start
