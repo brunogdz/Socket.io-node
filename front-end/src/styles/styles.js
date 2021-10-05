@@ -141,7 +141,7 @@ export const TextoMsgRecebida = styled.p`
 `;
 
 /* Botão e caixa mensagem */
-export const EnviarMsg = styled.div`
+export const EnviarMsg = styled.form`
     padding: 18px 15px;
     display: flex;
     justify-content: space-between;

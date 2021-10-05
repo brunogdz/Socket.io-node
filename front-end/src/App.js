@@ -53,10 +53,11 @@ function App() {
         setUsuarioId(response.data.usuario.id)
         setLogged(true);
         socket.emit("sala_conectar", sala);
+        listarMensagens();
       }).catch((err) => {
-        if(err.response){
+        if (err.response) {
           console.log(err.response.data.mensagem);
-        }else{
+        } else {
           console.log("Erro: Tente mais tarde")
         }
       })
@@ -65,16 +66,37 @@ function App() {
     // socket.emit("sala_conectar", sala);
   }
 
-  const enviarMensagem = async () => {
+  const listarMensagens = async () => {
+    await api.get('/listar-mensagem/' + sala)
+      .then((response) => {
+        console.log(response);
+        // setListaMensagem([...listamensagem, conteudoMensagem.conteudo])
+        setListaMensagem(response.data.mensagens);
+      }).catch((err) => {
+        if (err.response) {
+          console.log(err.response.data.mensagem);
+          setListaMensagem()
+        } else {
+          console.log("Erro: Tente mais tarde!");
+        }
+      })
+  }
+
+  const enviarMensagem = async e => {
+    // para nao recarregar a pagina
+    e.preventDefault();
     // alert("Mensagem: " + mensagem)
     const conteudoMensagem = {
       sala,
       conteudo: {
-        nome,
-        mensagem
+        mensagem,
+        usuario: {
+          id: usuarioId,
+          nome
+        }
       }
     }
-    // console.log(conteudoMensagem)
+    console.log(conteudoMensagem)
     await socket.emit("enviar_mensagem", conteudoMensagem);
     setListaMensagem([...listamensagem, conteudoMensagem.conteudo]);
     setMensagem("")
@@ -86,7 +108,7 @@ function App() {
 
       {!logged ?
         <Content>
-          <Header>Bate papo UOL socket</Header>
+          <Header>Whatsapp 2</Header>
           <Form onSubmit={conectarSala}>
             <Field>
               <Label>Email: </Label>
@@ -118,16 +140,16 @@ function App() {
             {listamensagem.map((msg, key) => {
               return (
                 <div key={key}>
-                  {nome === msg.nome ?
+                  {usuarioId === msg.usuario.id ?
                     <MsgEnviada >
                       <DetMsgEnviada>
-                        <TextoMsgEnviada>{msg.nome} : {msg.mensagem}</TextoMsgEnviada>
+                        <TextoMsgEnviada>{msg.usuario.nome} : {msg.mensagem}</TextoMsgEnviada>
                       </DetMsgEnviada>
                     </MsgEnviada>
                     :
                     <MsgRecebida>
                       <DetMsgRecebida>
-                        <TextoMsgRecebida>{msg.nome} : {msg.mensagem}</TextoMsgRecebida>
+                        <TextoMsgRecebida>{msg.usuario.nome} : {msg.mensagem}</TextoMsgRecebida>
                       </DetMsgRecebida>
                     </MsgRecebida>
                   }
@@ -136,10 +158,10 @@ function App() {
             })}
 
           </ChatBox>
-          <EnviarMsg>
+          <EnviarMsg onSubmit={enviarMensagem}>
             <CampoMsg type="text" name="mensagem" placeholder="Mande a mensagem aqui"
               value={mensagem} onChange={(texto) => { setMensagem(texto.target.value) }} />
-            <BtnEnviar onClick={enviarMensagem}>Enviar</BtnEnviar>
+            <BtnEnviar >Enviar</BtnEnviar>
           </EnviarMsg>
 
         </ConteudoChat>

@@ -5,6 +5,8 @@ const app = express()
 const port = 8080;
 
 const Usuario = require('./models/Usuario');
+const Mensagem = require('./models/Mensagem');
+const Sala = require('./models/Sala');
 
 app.use(express.json());
 
@@ -16,9 +18,63 @@ app.use((req, res, next) => {
   next();
 })
 
-app.get('/', (req, res) => {
-  res.send('Aoba')
+app.get('/listar-mensagem/:sala', async (req, res) => {
+  const { sala } = req.params;
+  await Mensagem.findAll({
+    order: [['id','ASC']],
+    where: { salaId: sala },
+    include: [{
+      model: Usuario
+    },{
+      model: Sala
+    }]
+  }).
+  then((mensagens)=> {
+    return res.json({
+      erro: false,
+      mensagens
+    });
+  }).catch(() => {
+    return res.status(400).json({
+      erro: true,
+      mensagem: 'Erro não possui mensagens'
+    })
+  })
 })
+
+app.post('/cadastrar-mensagem', async (req, res) => {
+
+  await Mensagem.create(req.body)
+    .then(() => {
+      return res.json({
+        erro: false,
+        mensagem: "Mensagem cadastrada com sucesso!"
+      });
+    }).catch(() => {
+      return res.status(400).json({
+        erro: true,
+        mensagem: "Erro Mensagem não cadastrada com sucesso!"
+      })
+    })
+});
+
+app.post('/cadastrar-sala', async (req, res) => {
+
+  await Sala.create(req.body)
+    .then(() => {
+      return res.json({
+        erro: false,
+        mensagem: "Sala cadastrada com sucesso!"
+      });
+    }).catch(() => {
+      return res.status(400).json({
+        erro: true,
+        mensagem: "Erro sala não cadastrada com sucesso!"
+      })
+    })
+});
+
+
 
 app.post('/cadastrar-usuario', async (req, res) => {
   var dados = req.body;
@@ -30,7 +86,7 @@ app.post('/cadastrar-usuario', async (req, res) => {
     }
   })
 
-  if(usuario){
+  if (usuario) {
     return res.status(400).json({
       erro: true,
       mensagem: 'Usuário já cadastrado!'
@@ -50,15 +106,15 @@ app.post('/cadastrar-usuario', async (req, res) => {
     })
 });
 
-app.post('/validar-acesso', async(req,res) => {
+app.post('/validar-acesso', async (req, res) => {
   const usuario = await Usuario.findOne({
-    attributes: ['id','nome'],
+    attributes: ['id', 'nome'],
     where: {
       email: req.body.email
     }
   });
 
-  if(usuario === null){
+  if (usuario === null) {
     return res.status(400).json({
       erro: true,
       mensagem: "Erro: Usuário não encontrado no banco de dados"
@@ -69,7 +125,7 @@ app.post('/validar-acesso', async(req,res) => {
     erro: false,
     mensagem: "Login realizado com sucesso!",
     usuario
-    
+
   })
 });
 
@@ -92,6 +148,13 @@ io.on("connection", (socket) => {
 
   socket.on("enviar_mensagem", (dados) => {
     console.log(dados);
+
+    Mensagem.create({
+      mensagem: dados.conteudo.mensagem,
+      salaId: dados.sala,
+      usuarioId: dados.conteudo.usuario.id
+    })
+
     socket.to(dados.sala).emit("receber_mensagem", dados.conteudo);
   })
 })
